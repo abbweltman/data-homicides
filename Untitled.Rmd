@@ -1,0 +1,70 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+#install.packages('sf')
+#install.packages('leaflet')
+
+library(tidyverse)
+library(janitor)
+library(sf)
+library(leaflet)
+
+```
+
+```{r}
+
+#the first graph I wanted to identify was how many violent crimes resulted in arrests in Baltimore and what percent of violentcrimes actually resulted in arrests. 
+
+homicide_data <- read_csv("~/Documents/GitHub/data-homicides/homicide-data.csv") %>% 
+ as.data.frame() %>% 
+  clean_names()
+
+balt_homicides <- homicide_data %>%
+  filter(city == "Baltimore") 
+
+#In this tyable we can see that there were 2827 homicides in Baltimore now I want to see how many of these crimes resulted in an arrests. 
+
+balt_homicide_arrest <- balt_homicides %>%
+filter(disposition == "Closed by arrest")
+
+#With this table I was able to conclude that 1002 of these crimes were closed by arrest. Then If I divide 1002 by 2827 I get a percent of 35.44% of these homicides resulting in a arrrest. In the story they say fewers then 27%. I assume this comes from some margin of error but Iwill inquire further. 
+
+  
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+#Next I want to look at the change in crime rate in Baltimore from 2014-2018 becasue the article referenced a spike in crime after 2015 and by looking at the crime rate of each year in Baltimore from before that year until when the article was posted we can see if this trend exists in the data. I created my own data table from FBI database, voilent crime known by law enforcement. 
+
+bmore_cr <- read_excel("~/Documents/GitHub/data-homicides/Baltimore Crime Rate Data-2.xlsx")  %>%
+  as.data.frame() %>% 
+  clean_names()
+
+bmore_cr %>%
+ select(city,population, violent_crime) %>%
+  mutate(crime_rate= (violent_crime/population * 100 )) 
+
+   
+#With this table I can see the crime rates of each year and determine how many percentage points it changed each year from this code I can determine that there was gradual increase in Violent crime after 2015. From this chart is says the highest crime rate was in 2017. 
+     
+```
+```{r}
+#I want to examine the rate of arrest so I went to Baltimore Indicators Alliance and pulled the Number of arrests per 1000 residents in Baltimore. 
+
+balt_arrests <- read_csv("~/Documents/GitHub/data-homicides/Arrests_-6315047742727687923.csv")
+
+  
+
+```
+
