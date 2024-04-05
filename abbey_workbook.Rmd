@@ -1,0 +1,125 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+#install.packages('sf')
+#install.packages('leaflet')
+
+library(tidyverse)
+library(janitor)
+library(sf)
+library(leaflet)
+
+```
+
+```{r}
+
+#the first graph I wanted to identify was how many violent crimes resulted in arrests in Baltimore and what percent of violentcrimes actually resulted in arrests. 
+
+homicide_data <- rio::import("https://raw.githubusercontent.com/abbweltman/data-homicides/master/homicide-data.csv") %>% 
+ as.data.frame() %>% 
+  clean_names()
+
+balt_homicides <- homicide_data %>%
+  filter(city == "Baltimore") %>% 
+  mutate(date1 = lubridate::ymd(reported_date)) %>% 
+  mutate(year = year(date1))
+
+#In this table we can see that there were 2827 homicides in Baltimore now I want to see how many of these crimes resulted in an arrests. 
+
+balt_homicide_arrest <- balt_homicides %>%
+  group_by(year, disposition) %>% 
+#filter(disposition == "Closed by arrest") %>% 
+  count()
+
+#With this table I was able to conclude that 1002 of these crimes were closed by arrest. Then If I divide 1002 by 2827 I get a percent of 35.44% of these homicides resulting in a arrest. In the story they say fewer then 27%. So now I will take this table and apply it to the years highlighted in the story
+
+balt_arrests_14 <- balt_homicides %>%
+  group_by(disposition) %>% 
+filter(year == "2014")%>%
+count(disposition)
+sum(balt_arrests_14$n)
+
+#For 2014 the sum of all the violent crimes was 211 if you divide 211 by the amount of crimes closed by arrests 86 you get an arrest rate of 40.7% this represents the 41% of arrests mentioned in the story. 
+
+balt_arrests_17 <- balt_homicides %>%
+  group_by(disposition) %>% 
+filter(year == "2017")%>%
+count(disposition)
+sum(balt_arrests_17$n)
+
+# For 2017 I divided the 93 cases closed by arrests by the 340 total crimes to get an arrest rate in 2017 of which is where the story got the 27%. Therefore since 2014 rate of arrests in Baltimore has dropped 14 percentage points which is what was stated in the story as well. 
+  
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+#Next I want to look at the change in crime rate in Baltimore from 2014-2018 becasue the article referenced a spike in crime after 2015 and by looking at the crime rate of each year in Baltimore from before that year until when the article was posted we can see if this trend exists in the data. I created my own data table from FBI database, voilent crime known by law enforcement. 
+
+bmore_cr <- rio::import("https://github.com/abbweltman/data-homicides/raw/master/Baltimore%20Crime%20Rate%20Data-2.xlsx")  %>%
+  as.data.frame() %>% 
+  clean_names()
+
+bmore_cr <- bmore_cr %>%
+ select(city,population, violent_crime) %>%
+  mutate(crime_rate= (violent_crime/population * 1000 )) 
+
+   
+#With this table I can see the crime rates of each year and determine how many percentage points it changed each year from this code I can determine that there was gradual increase in Violent crime after 2015. From this chart is says the highest crime rate was in 2017. 
+     
+```
+```{r}
+#The story also reported that since 2015 the arrest rate has never rose about 30% so now we will look at the 2015 through 2018 when the story was published to see if the percent of arrests ever rose above 30% 
+
+balt_arrests_15 <- balt_homicides %>%
+  group_by(disposition) %>% 
+filter(year == "2015")%>%
+count(disposition)
+sum(balt_arrests_15$n)
+
+# 342 is the sum of violent crime cases if you divide this by 87 closed cases I get a arrest rate of 25% this the arrest rate dropped 15 percentage points from 2014 indicated before in the 2014 arrest table and also in the story. 25% is lower than the 30% the story said was not passed since then. 
+
+balt_arrests_16 <- balt_homicides %>%
+  group_by(disposition) %>% 
+filter(year == "2016")%>%
+count(disposition)
+sum(balt_arrests_16$n)
+
+#in 2016 the arrest rate was 72/320 = 22.5% this corresponds with the story. We also know the next value in 2017 is 27% which also makes the story correct. This was the last year aviailable in the data.  
+
+```
+
+
+
+
+
+```{r}
+#I want to examine the rate of arrest so I went to Baltimore Indicators Alliance and pulled the Number of arrests per 1000 residents in Baltimore. 
+
+
+library(sf)
+library(ggplot2)
+
+homicide_data <- homicide_data +
+  st_as_sf(data, coords = c("lon", "lat"), crs = 4326)+
+ggplot() +
+  geom_sf(data = data_sf, aes(color = disposition)) +
+  scale_color_manual(values = c("Closed by arrest" = "green", 
+                                "Closed without arrest" = "red", 
+                                "Open/No arrest" = "blue")) +
+  theme_minimal() +
+  labs(title = "Homicides Arrest in Baltimore") +
+  theme(legend.title = element_blank())
+
+```
+
