@@ -39,6 +39,10 @@ filter(year == "2014")%>%
 count(disposition)
 sum(balt_arrests_14$n)
 
+balt_arrests_14_arrests <- balt_arrests_14 %>% 
+  filter(disposition == "Closed by arrest")
+sum(balt_arrests_14_arrests$n) / sum(balt_arrests_14$n)
+
 #For 2014 the sum of all the violent crimes was 211 if you divide 211 by the amount of crimes closed by arrests 86 you get an arrest rate of 40.7% this represents the 41% of arrests mentioned in the story. 
 
 balt_arrests_17 <- balt_homicides %>%
@@ -71,6 +75,8 @@ bmore_cr <- bmore_cr %>%
 #With this table I can see the crime rates of each year and determine how many percentage points it changed each year from this code I can determine that there was gradual increase in Violent crime after 2015. From this chart is says the highest crime rate was in 2017. 
      
 ```
+
+
 ```{r}
 #The story also reported that since 2015 the arrest rate has never rose about 30% so now we will look at the 2015 through 2018 when the story was published to see if the percent of arrests ever rose above 30% 
 
@@ -80,6 +86,10 @@ filter(year == "2015")%>%
 count(disposition)
 sum(balt_arrests_15$n)
 
+balt_arrests_15_arrests <- balt_arrests_15 %>% 
+  filter(disposition == "Closed by arrest")
+sum(balt_arrests_15_arrests$n) / sum(balt_arrests_15$n)
+
 # 342 is the sum of violent crime cases if you divide this by 87 closed cases I get a arrest rate of 25% this the arrest rate dropped 15 percentage points from 2014 indicated before in the 2014 arrest table and also in the story. 25% is lower than the 30% the story said was not passed since then. 
 
 balt_arrests_16 <- balt_homicides %>%
@@ -87,6 +97,10 @@ balt_arrests_16 <- balt_homicides %>%
 filter(year == "2016")%>%
 count(disposition)
 sum(balt_arrests_16$n)
+
+balt_arrests_16_arrests <- balt_arrests_16 %>% 
+  filter(disposition == "Closed by arrest")
+sum(balt_arrests_16_arrests$n) / sum(balt_arrests_16$n)
 
 #in 2016 the arrest rate was 72/320 = 22.5% this corresponds with the story. We also know the next value in 2017 is 27% which also makes the story correct. This was the last year aviailable in the data.  
 

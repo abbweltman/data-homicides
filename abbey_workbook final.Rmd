@@ -127,7 +127,8 @@ sum(balt_arrests_16_arrests$n) / sum(balt_arrests_16$n)
 #I want to examine the rate of arrest so I went to Baltimore Indicators Alliance and pulled the Number of arrests per 1000 residents in Baltimore. 
 
 library(ggplot2)
-
-
+balt_total_arrests  %>% 
+   ggplot(aes(x=year, y=pct_whole, weight=pct_whole, fill=pct_whole))+
+  geom_col()
 
 ```
