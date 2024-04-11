@@ -16,7 +16,7 @@ library(leaflet)
 
 ```{r}
 
-#the first graph I wanted to identify was how many violent crimes resulted in arrests in Baltimore and what percent of violentcrimes actually resulted in arrests. 
+#the first graph I wanted to identify was how many violent crimes resulted in arrests in Baltimore and what percent of violent crimes actually resulted in arrests. 
 
 homicide_data <- rio::import("https://raw.githubusercontent.com/abbweltman/data-homicides/master/homicide-data.csv") %>% 
  as.data.frame() %>% 
@@ -40,10 +40,12 @@ balt_homicides_yr <- balt_homicides %>%
   group_by(year) %>% 
 mutate(total = n) 
 
-balt_homicides_arrests <- balt_homicides_yr %>% 
-inner_join(balt_homicides_yr_arrests, by="year") 
+balt_total_arrests <- balt_homicides_yr %>% 
+inner_join(balt_homicides_yr_arrests, by="year")%>%
+mutate(pct_whole = arrests / total * 100)%>%
+select(year, disposition, total, arrests, pct_whole)
 
-sum(balt_homicides_arrests$arrests) / sum(balt_homicides_arrests$total)
+sum(balt_total_arrests$arrests) / sum(balt_total_arrests$total)
 #Rsw: filter(disposition == "Closed by arrest") %>%  should not have been commented out
 
 #With this table I was able to conclude that 1002 of these crimes were closed by arrest. Then If I divide 1002 by 2827 I get a percent of 35.44% of these homicides resulting in a arrest. In the story they say fewer then 27%. So now I will take this table and apply it to the years highlighted in the story
@@ -124,19 +126,8 @@ sum(balt_arrests_16_arrests$n) / sum(balt_arrests_16$n)
 ```{r}
 #I want to examine the rate of arrest so I went to Baltimore Indicators Alliance and pulled the Number of arrests per 1000 residents in Baltimore. 
 
-#this code failed. I dont understand why you are using the sf package to create a ggplot.
-
 library(ggplot2)
 
-balt_homicides_sf <- balt_homicides %>% 
-    st_as_sf(
-    coords = c("lon","lat"),
-    crs="NAD83") %>%
-  geom_sf(data = homicide_data, aes(color = "disposition")) +
-  scale_color_manual(values = c("Closed by arrest" = "green", 
-                                "Closed without arrest" = "red", 
-                                "Open/No arrest" = "blue")) +
- # theme_minimal() +
- # labs(title = "Homicides Arrest in Baltimore") +
+
 
 ```
