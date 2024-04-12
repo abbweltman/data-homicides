@@ -46,7 +46,6 @@ mutate(pct_whole = arrests / total * 100)%>%
 select(year, disposition, total, arrests, pct_whole)
 
 sum(balt_total_arrests$arrests) / sum(balt_total_arrests$total)
-#Rsw: filter(disposition == "Closed by arrest") %>%  should not have been commented out
 
 #With this table I was able to conclude that 1002 of these crimes were closed by arrest. Then If I divide 1002 by 2827 I get a percent of 35.44% of these homicides resulting in a arrest. In the story they say fewer then 27%. So now I will take this table and apply it to the years highlighted in the story
 ```
@@ -132,3 +131,18 @@ balt_total_arrests  %>%
   geom_col()
 
 ```
+```{r}
+#MEMO
+
+#The purpose of my notebook was to validate the findings in the story and expose the disparity between homicides and arrests in Baltimore. In the Washington Post, they did a deep dive into Baltimore homicides and how often these violent crimes result in arrests. In this analysis, they were able to identify spikes in crime rate and the gradual decline of the success of law enforcement in bringing justice to the families mourning victims of these crimes. 
+
+#The reporters were able to use the data with compelling stories to strengthen the impact. For example, when they spoke about one of the founding members of the Mothers of Murdered Sons and Daughters United Daphne Alston, and the loss of her son, that is only one instance. It is hard to put into perspective how often these crimes are occurring. By supporting the tragic stories with the hard-hitting data readers are quick to realize the severity of the problem. This strategy was effective in showing the audience that the victims are rising and justice is declining in these crimes. 
+
+#The reporters communicated this in the story by creating a timeline in chronological order. They talked about current events that could be tied to the changes in the data and when they occur. They showed the chain of events that led to more and more violence. It started with Freddie Gray's death in 2015. They use that event to talk about the surge of crimes after 2015 and then the data shown each year after that. They talk about events from 2015 and then transition into declining results from law enforcement leading to mistrust from Baltimore civilians. 
+
+#I followed this structure with my notebook as well. I first created a table that showed the Baltimore Homicides that were closed by arrests each year. Then I was able to join that with the total population to find the percentage of arrests per year and then the overall percentage from the past 5 years. After that, I also created my notebook in chronological order by creating a table for each year. For the next chunk, I curated my own data set using the FBI Census data about violent crimes for each year. I was able to access the violent crimes each year to calculate the total crime rate in Baltimore for each year. 
+
+#For data set transparency the reporter did a good job of explaining where all the data came from. Many of the reports were from the police and law enforcement data. However, they only mention the homicide data briefly once. I think this story would benefit a lot from hyperlinks to specific infographics or visuals that displayed the findings of the data. I found a major flaw of the original story was that it had a section about the geographical pattern of data in the “black butterfly: but the Washington Post did not have it displayed in the story. It is easy to find where the data is from but they could have made it more impactful by including graphics, charts, or maps displaying the rise in crime. However, the storytelling was done very well in terms of pulling on heartstrings and capturing the audience. 
+
+#In my notebook I was able to show percents that were easy to conceptualize and match with the story. The story Identified this problem and its large effect on the community.
+
